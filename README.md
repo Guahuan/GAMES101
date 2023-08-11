@@ -1,2 +1,3 @@
 # GAMES101
-Homework
+
+Notes and Homework
