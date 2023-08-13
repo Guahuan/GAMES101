@@ -13,6 +13,116 @@
 
 每个方面都会从基础原理出发讲解到实际应用，并介绍前沿的理论研究。通过本课程，你可以学习到计算机图形学背后的数学和物理知识，并锻炼实际的编程能力。
 
+## Lecture 02 Linear Algebra
+
+### Dot(scalar) Product 点乘
+
+- 可以求两个向量夹角余弦值。
+- 可以求向量的投影，来分解一个向量。
+- 判断两个向量远近（close）。
+- 通过点乘的正负判断两个向量方向前后（forward / backward）。
+
+### Cross Product 叉乘
+
+- 右手定则：a x b方向由a转向b
+- 通过叉乘获得坐标轴
+- 坐标形式：![18](./image/18.png)
+- 用于判定左右
+- 用于判定内外
+
+### Orthonormal Coordinate Frames 正交坐标系
+
+u，v，w为空间中正交单位向量：
+
+![19](./image/19.png)
+
+## Lecture 03 Transformation
+
+### 线性变换
+
+<img src="./image/24.png" alt="24" style="zoom:30%;" />
+
+#### Scale 缩放
+
+![20](./image/20.png)
+
+#### Reflection 反射（对称）
+
+![21](./image/21.png)
+
+#### Shear 切变
+
+![22](./image/22.png)
+
+#### Rotate 旋转（默认绕原点旋转、逆时针方向）
+
+![23](./image/23.png)
+
+### Homogeneous Coordinates 齐次坐标
+
+为了将平移操作和线性变换统一，引入齐次坐标，即增加一个维度。
+
+- **2D point** = $(x,y,1)^T$
+- **2D vector** = $(x,y,0)^T$
+
+齐次坐标引入新维度值的解释：
+
+- vector + vector = vector
+
+- point - point = vector
+
+- point + vector = point
+
+- point + point = 中点
+
+  **对于第四条的解释如下：**
+
+  <img src="./image/26.png" alt="26" style="zoom:40%;" />
+
+#### Translations 平移
+
+<img src="./image/25.png" alt="25" style="zoom:50%;" />
+
+#### Affine Map 仿射变换
+
+![27](./image/27.png)
+
+![28](./image/28.png)
+
+#### Inverse Transform 逆变换
+
+乘逆矩阵。
+
+#### Composing Transforms 组合变换
+
+依次左乘。
+
+如果绕任意一点旋转，操作如下：
+
+1. 平移到原点
+2. 旋转
+3. 平移到原位置
+
+### 3D Transforms
+
+仿射变换（先线性变换，再平移）：
+
+![29](./image/29.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## Lecture 08 Shading 2 
 
 ###### Shading, Pipeline and Texture Mapping
