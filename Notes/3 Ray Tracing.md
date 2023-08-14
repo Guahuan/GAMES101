@@ -188,7 +188,35 @@
 
 ### Basic Radiometry 辐射度量学
 
-  
+######   高级光线追踪
+
+**Radiometry**
+
+准确的度量光照，定义了光照的各种属性：
+
+- **Radiant Energy**：电磁辐射的能量（焦耳 J）。
+- **Radiant Flux（Power）**：单位时间的能量，功率（瓦特 W，流明 lm），通量。
+- **Intensity**：一个光源向周围辐射了多少能量。
+- **Irradiance**：一个物体表面接受了多少能量。
+- **Radiance**：光在传播过程中的能量。
+
+#### Radiant Intensity
+
+单位立体角（solid angle）辐射出的能量
+
+![33](./image/33.png)
+
+##### Angles and Solid Angles 立体角
+
+**angle**：弧长 / 半径
+
+**solid angle**： 球面面积 / 半径平方，$\Omega = \frac{A}{r^2}$，球有4π立体角
+
+若一个点光源向各个方向均匀辐射能量，则每个单位立体角辐射的能量为$I = \frac{\phi}{4\pi}$。
+
+## Lecture 15 Ray Tracing 3
+
+###### Light Transport & Global Illumination
 
 
 
