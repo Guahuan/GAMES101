@@ -36,7 +36,7 @@ u，v，w为空间中正交单位向量：
 
 ![19](./image/19.png)
 
-## Lecture 03 Transformation
+## Lecture 03 Transformation 1
 
 ### 线性变换
 
@@ -58,7 +58,11 @@ u，v，w为空间中正交单位向量：
 
 ![23](./image/23.png)
 
-### Homogeneous Coordinates 齐次坐标
+$$
+R_{-\theta} = R_{\theta}^T = R_{\theta}^{-1} (旋转矩阵为正交矩阵)
+$$
+
+### Hom ogeneous Coordinates 齐次坐标
 
 为了将平移操作和线性变换统一，引入齐次坐标，即增加一个维度。
 
@@ -109,11 +113,169 @@ u，v，w为空间中正交单位向量：
 
 ![29](./image/29.png)
 
+#### Rotation around x-，y-，or z-axis
 
+将复杂旋转分解为简单的绕轴旋转：
 
+![34](./image/34.png)
 
+绕任意**过原点旋转轴n**旋转公式：
 
+![35](./image/35.png)
 
+## Lecture 04 Transformation 2
+
+### Viewing Transformation 观测变换
+
+最终将所有物体映射到$[-1,1]^3$中
+
+- Model（模型） Transformation（放置物体，和视图变换类似）
+- View（视图） / Camera Transformation（放置相机）
+- Projection（投影） Transformation
+  - Orthographic（正交）Projection
+  - Perspective（透视）Projection
+
+#### View / Camera Transformation 视图变换
+
+1. 定义一个相机
+
+   - Position，$\vec{e}$：相机位置
+   - Look-at / gaze direction，$\hat{g}$：相机的观测方向
+   - Up direction ，$\hat{t}$：相机的向上方向（决定相机自身旋转）
+
+2. 认为相机永远不变，即：
+
+   **位置为原点、观测方向为-Z，向上方向为Y**。
+
+3. 使用$M_{view}$矩阵移动相机：
+
+   - 将$\vec{e}$平移到原点
+   - 将$\hat{g}$旋转到-Z
+   - 将$\hat{t}$旋转到Y
+
+   $$
+   M_{view} = R_{view}T_{view} = 
+   \begin{bmatrix}
+   x_{\hat{g} \times \hat{t}} & y_{\hat{g} \times \hat{t}} & z_{\hat{g} \times \hat{t}} & 0 \\
+   x_{\hat{t}} & y_{\hat{t}} & z_{\hat{t}} & 0 \\
+   x_{-\hat{g}} & y_{-\hat{g}} & z_{-\hat{g}} & 0 \\
+   0 & 0 & 0 & 1
+   \end{bmatrix}
+   \begin{bmatrix}
+   1 & 0 & 0 & -x_{\vec{e}} \\
+   0 & 1 & 0 & -y_{\vec{e}} \\
+   0 & 0 & 1 & -z_{\vec{e}} \\
+   0 & 0 & 0 & 1
+   \end{bmatrix}
+   $$
+
+#### Projection Transformation 投影变换
+
+![36](./image/36.png)
+
+##### Orthographic Projection 正交投影
+
+将一个立方体 $[l,r] \times [b,t] \times [f,n]$ 映射到正则立方体（canonical cube）$[-1,1]^3$中：
+
+![37](./image/37.png)
+
+先平移，再缩放：
+
+![38](./image/38.png)
+
+##### Perspective Projection 透视投影
+
+![39](./image/39.png)
+
+1. 将一个Frustum挤压成Cuboid，$M_{persp->ortho}$：
+
+   - 近平面上的点不变
+
+   - 远平面上的点Z值不变
+
+   - 远平面中心点不变
+
+2. 做正交投影 $M_{ortho}$
+
+**挤压操作**：
+
+- 使用**Z值与n的缩放比例**获得挤压后的**X、Y**，下图将（x，y，z）变换为（x‘，y'，z'），此时缩放后的Z‘值不确定：
+
+  ![40](./image/40.png)
+  $$
+  y' = \frac{n}{z}y,\ x'=\frac{n}{z}x
+  $$
+
+- 通过**近平面上的点不变、远平面中心点不变**两个性质，获得变换矩阵：
+
+  $$
+  M_{persp->ortho} =
+  \begin{bmatrix}
+  n & 0 & 0 & 0 \\
+  0 & n & 0 & 0 \\
+  0 & 0 & n+f & -nf \\
+  0 & 0 & 1 & 0
+  \end{bmatrix}
+  $$
+
+综上**透视投影矩阵**：
+
+$M_{persp} = M_{ortho}M_{persp->ortho}$
+
+## Lecture 05 Rasterization 1
+
+###### Triangles
+
+### 视锥
+
+可以这样定义一个视锥：
+
+- **field-of-view（fovY）：**可视角度，从相机到两对边中点的角度。
+- **aspect ratio：**宽高比。
+
+![41](./image/41.png)
+
+使用**fovY**和**aspect ratio**代替**l、r、b、t**：
+
+![42](./image/42.png)
+
+### Canonical Cube to Screen $[-1,1]^3$到屏幕
+
+观测变换之后进行视口变换。
+
+屏幕坐标左下角是原点。像素（Pixel）坐标从（0，0）到（width - 1，height - 1），像素中心（x + 0.5，y + 0.5）。
+
+#### Viewport Transform 视口变换
+
+不考虑Z值，将经过观测变化获得的$[-1,1]^2$映射到$[0,width]\times[0,height]$中：
+
+![43](./image/43.png)
+
+### Rasterization 光栅化（三角形）
+
+在光栅设备中的绘制问题。
+
+#### Sampling 采样
+
+对一个函数进行离散化处理。会产生走样（Aliasing）问题，主要是锯齿（Jaggies）。
+
+光栅化中，通过采样判断像素中心是否在三角形内：
+
+<img src="./image/44.png" alt="44" style="zoom:33%;" />
+
+![45](./image/45.png)
+
+```c
+// 对每个像素点，判断中心在不在三角形内
+// inside()函数使用叉乘判断
+for(int x = 0; x < xmax; ++x)
+  for(int y = 0; y < ymax; ++y)
+    image[x][y] = inside(tri, x + 0.5, y + 0.5);
+```
+
+## Lecture 06 Rasterization 2
+
+###### Antialiasing and Z-Buffering
 
 
 
