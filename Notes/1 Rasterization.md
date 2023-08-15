@@ -251,13 +251,17 @@ $M_{persp} = M_{ortho}M_{persp->ortho}$
 
 ![43](./image/43.png)
 
+## Lecture 06 Rasterization 2
+
+###### Antialiasing and Z-Buffering
+
 ### Rasterization 光栅化（三角形）
 
 在光栅设备中的绘制问题。
 
 #### Sampling 采样
 
-对一个函数进行离散化处理。会产生走样（Aliasing）问题，主要是锯齿（Jaggies）。
+对一个函数进行离散化处理。
 
 光栅化中，通过采样判断像素中心是否在三角形内：
 
@@ -273,9 +277,66 @@ for(int x = 0; x < xmax; ++x)
     image[x][y] = inside(tri, x + 0.5, y + 0.5);
 ```
 
-## Lecture 06 Rasterization 2
+#### Sampling Artifacts（采样瑕疵）
 
-###### Antialiasing and Z-Buffering
+由于走样（Aliasing）产生了一系列问题：
+
+- Jaggies（锯齿）
+- Moire Patterns（摩尔纹）
+- Wagon Wheel Illusion（车轮效应）
+
+本质原因是：**信号变化太快，而采样太慢**。
+
+#### Antialiasing 反走样
+
+**走样**：两类方法通过同一种采样无法区分。
+
+**滤波（Filtering）**：抹去一些特定的频率。
+
+##### Frequency Domain 频域
+
+**傅立叶变换（Fourier Transform）**：任何一个函数都可以用正弦、余弦函数展开；经过傅立叶展开后，此函数从时域（spatial domain，时间为自变量）转换成频域（frequency domain，频率为自变量）；即，任何函数都可以**分解成不同的频率**。
+
+![47](./image/47.png)
+
+**频域图：**
+
+- 低频在中心，高频在外侧
+- 越亮表示此频率越多
+- 高通滤波：过滤低频信息，获得图像的边界（图像突变位置）
+- 低通滤波：过滤高频信息，去除边界，模糊图像。
+
+<img src="./image/48.png" alt="48"  />
+
+**Filtering（滤波） = Convolution（卷积） = Averaging（平均）**
+
+**卷积定理**：时域上的卷积 = 频域上的乘积；时域上的乘积 = 频域上的卷积。
+
+![49](./image/49.png)
+
+**Sampling（采样） = Repeating Frequency Contents（重复频域内容）**
+
+![50](./image/50.png)
+
+**Aliasing（走样） = Mixed Frequency Contents（混淆频域内容）**
+
+![51](./image/51.png)
+
+##### Blurred（Pre-Filtering） 模糊处理
+
+采样之前做一个模糊处理（低通滤波卷积）。
+
+![46](./image/46.png)
+
+
+
+![52](./image/52.png)
+
+![53](./image/53.png)
+
+
+
+
 
 
 
