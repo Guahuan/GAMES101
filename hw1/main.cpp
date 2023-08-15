@@ -74,6 +74,8 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
     // Then return it.
 
     // Compute l, r, b, t
+    zNear = -zNear;
+    zFar = -zFar;
     float t = std::tan((eye_fov * MY_PI / 180) / 2) * fabs(zNear);
     float b = -t;
     float r = aspect_ratio * t;
@@ -157,7 +159,7 @@ int main(int argc, const char** argv)
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
         // r.set_model(get_model_matrix(angle));
-        r.set_model(get_rotation(Vector3f(1, 0, 0), angle));
+        r.set_model(get_rotation(Vector3f(0, 0, 1), angle));
         r.set_view(get_view_matrix(eye_pos));
         r.set_projection(get_projection_matrix(45, 1, 0.1, 50));
 
