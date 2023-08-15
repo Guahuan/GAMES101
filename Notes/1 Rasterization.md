@@ -62,7 +62,7 @@ $$
 R_{-\theta} = R_{\theta}^T = R_{\theta}^{-1} (旋转矩阵为正交矩阵)
 $$
 
-### Hom ogeneous Coordinates 齐次坐标
+### Homogeneous Coordinates 齐次坐标
 
 为了将平移操作和线性变换统一，引入齐次坐标，即增加一个维度。
 
