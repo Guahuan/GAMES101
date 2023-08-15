@@ -27,14 +27,39 @@ Eigen::Matrix4f get_model_matrix(float rotation_angle)
     // Create the model matrix for rotating the triangle around the Z axis.
     // Then return it.
     float rotation_angle_radian = rotation_angle * MY_PI / 180;
-    float cos = std::cos(rotation_angle);
-    float sin = std::sin(rotation_angle);
+    float cos = std::cos(rotation_angle_radian);
+    float sin = std::sin(rotation_angle_radian);
     model(0, 0) = cos;
     model(0, 1) = -sin;
     model(1, 0) = sin;
     model(1, 1) = cos;
 
     return model;
+}
+
+// Create the model matrix for rotating the triangle around any axis.
+// Rodrigues' rotation formula
+Eigen::Matrix4f get_rotation(Vector3f axis, float angle)
+{
+    float angle_radian = angle * MY_PI / 180;
+    float cos = std::cos(angle_radian);
+    float sin = std::sin(angle_radian);
+    Eigen::Matrix4f A = cos * Eigen::Matrix4f::Identity();
+
+    Eigen::Vector4f axis_homogeneous = Eigen::Vector4f(axis[0], axis[1], axis[2], 0);
+    Eigen::Matrix4f B = (1 - cos) * axis_homogeneous * axis_homogeneous.transpose();
+
+    Eigen::Matrix4f C;
+    C << 0, -axis[2], axis[1], 0,
+        axis[2], 0, -axis[0], 0,
+        -axis[1], axis[0], 0, 0,
+        0, 0, 0, 0;
+    C = sin * C;
+
+    Eigen::Matrix4f rotation = A + B + C;
+    rotation(3, 3) = 1;
+
+    return rotation;
 }
 
 Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
@@ -131,7 +156,8 @@ int main(int argc, const char** argv)
     while (key != 27) {
         r.clear(rst::Buffers::Color | rst::Buffers::Depth);
 
-        r.set_model(get_model_matrix(angle));
+        // r.set_model(get_model_matrix(angle));
+        r.set_model(get_rotation(Vector3f(1, 0, 0), angle));
         r.set_view(get_view_matrix(eye_pos));
         r.set_projection(get_projection_matrix(45, 1, 0.1, 50));
 
