@@ -138,10 +138,10 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
                 z_interpolated *= w_reciprocal;
 
                 // TODO : set the current pixel (use the set_pixel function) to the color of the triangle (use getColor function) if it should be painted.
-                if(z_interpolated > depth_buf[get_index(x, y)]) {
-                    Eigen::Vector3f point(x, y, 1.0f);
-                    set_pixel(point, t.getColor());
+                if(z_interpolated < depth_buf[get_index(x, y)]) {
                     depth_buf[get_index(x, y)] = z_interpolated;
+                    Eigen::Vector3f point(x, y, z_interpolated);
+                    set_pixel(point, t.getColor());
                 }
             }
         }
