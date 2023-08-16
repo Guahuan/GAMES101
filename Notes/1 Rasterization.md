@@ -334,25 +334,138 @@ for(int x = 0; x < xmax; ++x)
 
 ![53](./image/53.png)
 
+### Antialiasing By Supersampling：MSAA抗锯齿（超采样）
 
+对于任何一个像素，认为每个像素被划分为更小的像素（增加采样点）， 判断每个小像素是否在三角形内，来进行卷积操作。
 
+还有其他的抗锯齿方法：
 
+- **FXAA（Fast Approximate AA）**：先得到有锯齿的图，找到锯齿边界，替换为无锯齿边界，速度很快。
+- **TAA（Temporal AA）**：对一个静态场景，使用像素内不同位置来进行三角形判断，同时复用上一帧的计算结果进行卷积。
 
+超分辨率方法（Super resolution）：
 
+- **DLSS（Deep Learning Super Sampling）**：将一个图片放大时，为了不产生锯齿，使用深度学习猜测边界。
 
+### Z-buffering 深度缓冲
 
+#### Painter‘s Algorighm 画家算法
 
+先画最远的物体，再画近处的物体，进行覆盖。
 
+#### Z-Buffer 深度缓存
 
+对每一个像素，存储此像素显示的深度（最近），从而生成深度图。
 
+z越小越近，越大越远。
+
+复杂度：O(n)，n个三角形
+
+![54](./image/54.png)
+
+![56](./image/56.png)
+
+伪代码：
+
+![55](./image/55.png)
+
+## Lecture 07 Shading 1
+
+###### Illumination，Shading and Graphics Pipeline
+
+**着色（Shading）**：给物体添加材质。
+
+着色有局部性（local），不考虑阴影（光线是否被挡住）。
+
+**着色入参：**
+
+- 观测方向，v
+- 表面法向，n
+- 光照方向，l
+- 表面参数（颜色、亮度、纹路等）
+
+<img src="./image/57.png" alt="57" style="zoom: 33%;" />
+
+### Blinn-Phong Reflectance Model
+
+将着色分为三部分：
+
+- **Diffuse Reflection**：漫反射。
+- **Specular Highlights**：高光，镜面反射。
+- **Ambient Lighting**：环境光，假设为常量。
+
+#### Diffuse Reflection 漫反射
+
+<img src="./image/58.png" alt="58" style="zoom:50%;" />
+
+物体接收光线后，向所有方向反射光线，和观察方向无关。
+
+接收光的能量满足
+
+- **Lambert's Cosine Law**：受入射角影响。
+- **Light Falloff**：受离光源距离影响，$I' = \frac{I}{r^2}$。
+
+综合得到**Lambertian（Diffuse）Shading**：
+
+![59](./image/59.png)
+
+#### Specular Highlights 高光
+
+显示高光：
+
+- 观察方向和镜面反射方向接近
+- 半程向量和法向量接近
+
+![60](./image/60.png)
+
+指数p（一般大小为100～200）的目的是限制高光范围：
+
+![61](./image/61.png)
+
+#### Ambient Lighting 环境光
+
+大胆假设，环境光来自四面八方，是常量：
+
+![62](./image/62.png)
+
+综上，**Blinn-Phong **着色模型 为三种光照相加：
+
+![63](./image/63.png)
 
 ## Lecture 08 Shading 2 
 
 ###### Shading, Pipeline and Texture Mapping
 
- 
+### Shading Frequencies 着色频率
 
-### Texture Mapping
+- **面片着色（Flat Shading）**：通过每一个**三角面片的法向量**进行着色。
+- **顶点着色（Gouraud Shading）**：通过三角形的三个**顶点法向量**进行着色，对内部的点进行颜色的差值。顶点法向量由周围面法向量的平均。
+
+- **像素着色（Phong Shading）**：通过三角形三个顶点法向量，进行差值计算出内部每个**像素法向量**，使用每个像素法向量进行着色。
+
+通常像素着色要比面片着色效果好，计算量大；但模型足够复杂时，面片着色也可能有很好的效果。
+
+### Graphics（Real-time Rendering）Pipeline 图形（实时渲染）管线
+
+![64](./image/64.png)
+
+- **Model, View, Projection transforms**：Vertex Processing阶段
+- **Sampling triangle coverage**：Rasterization阶段
+- **Z-Buffer Visibility Tests**：Fragment Processing阶段
+- **Shading**：Vertex Processing阶段（顶点着色）、Fragment Processing阶段（像素着色），shader代码
+- **Texture mapping**：Vertex Processing阶段、Fragment Processing阶段
+
+#### Shader 着色器程序
+
+可以在硬件中运行的程序，有几何着色器（动态产生更多三角形）、顶点着色器、片段（像素）着色器等。
+
+shader中的代码会自动应用于每一个顶点或像素点，所以只关注一个顶点或像素点。
+
+OpenGL中为GLSL程序。
+
+GPU可以从硬件层次实现管线，是一个高度并行的处理器，有大量的单元，但是每个单元计算性能不高，适合进行图形学运算。
+
+### Texture Mapping 纹理映射
 
 **Texture**定义**mesh**中任何一个点的**不同**属性，以来渲染出不同颜色、材质等。
 
