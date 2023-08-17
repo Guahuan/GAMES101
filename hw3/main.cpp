@@ -50,7 +50,40 @@ Eigen::Matrix4f get_model_matrix(float angle)
 Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float zNear, float zFar)
 {
     // TODO: Use the same projection matrix from the previous assignments
+    Eigen::Matrix4f projection;
 
+    // Compute l, r, b, t
+    float t = std::tan((eye_fov * MY_PI / 180) / 2) * (-zNear);
+    float b = -t;
+    float r = aspect_ratio * t;
+    float l = -r;
+
+    // Orthographic projection
+    // 1. Translate to origin
+    Eigen::Matrix4f translate = Eigen::Matrix4f::Identity();
+    translate(0, 3) = - (r + l) / 2;
+    translate(1, 3) = - (t + b) / 2;
+    translate(2, 3) = - (zNear + zFar) / 2;
+    // 2. Sclae to [-1,1]^3
+    Eigen::Matrix4f scale = Eigen::Matrix4f::Identity();
+    scale(0, 0) = 2 / (r - l);
+    scale(1, 1) = 2 / (t - b);
+    scale(2, 2) = 2 / (zNear - zFar);
+    // 3. get Orthographic projection
+    Eigen::Matrix4f ortho = scale * translate;
+
+    // Get Matrix_persp2ortho
+    Eigen::Matrix4f persp2ortho = Eigen::Matrix4f::Zero();
+    persp2ortho(0, 0) = zNear;
+    persp2ortho(1, 1) = zNear;
+    persp2ortho(2, 2) = zNear + zFar;
+    persp2ortho(2, 3) = - zNear * zFar;
+    persp2ortho(3, 2) = 1;
+
+    // Get Perspective projection
+    projection = ortho * persp2ortho;
+
+    return projection;
 }
 
 Eigen::Vector3f vertex_shader(const vertex_shader_payload& payload)
@@ -247,10 +280,10 @@ int main(int argc, const char** argv)
 
     std::string filename = "output.png";
     objl::Loader Loader;
-    std::string obj_path = "../models/spot/";
+    std::string obj_path = "../../models/spot/";
 
     // Load .obj File
-    bool loadout = Loader.LoadFile("../models/spot/spot_triangulated_good.obj");
+    bool loadout = Loader.LoadFile("../../models/spot/spot_triangulated_good.obj");
     for(auto mesh:Loader.LoadedMeshes)
     {
         for(int i=0;i<mesh.Vertices.size();i+=3)
@@ -352,11 +385,11 @@ int main(int argc, const char** argv)
 
         if (key == 'a' )
         {
-            angle -= 0.1;
+            angle -= 10;
         }
         else if (key == 'd')
         {
-            angle += 0.1;
+            angle += 10;
         }
 
     }
