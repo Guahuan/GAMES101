@@ -195,7 +195,7 @@
 准确的度量光照，定义了光照的各种属性：
 
 - **Radiant Energy**：电磁辐射的能量（焦耳 J）。
-- **Radiant Flux（Power）**：单位时间的能量，功率（瓦特 W，流明 lm），通量。
+- **Radiant Flux（Power）**：单位时间的能量，功率（瓦特 W，流明 lm = lumen），光通量。
 - **Intensity**：一个光源向周围辐射了多少能量。
 - **Irradiance**：一个物体表面接受了多少能量。
 - **Radiance**：光在传播过程中的能量。
@@ -214,9 +214,104 @@
 
 若一个点光源向各个方向均匀辐射能量，则每个单位立体角辐射的能量为$I = \frac{\phi}{4\pi}$。
 
+##### Differential Solid Angles 微分立体角
+
+$\theta、\phi$各变化一下部分所产生的立体角的变化。
+
+![65](./image/65.png)
+
+#### Irradiance
+
+单位面积所接收的能量，面积需要与光线垂直（乘 $cos\theta$）。
+
+![66](./image/66.png)
+
+#### Radiance
+
+描述光线在单位立体角、单位面积的能量，两次微分。
+
+本质上是考虑一个微小的面，在一个微小的方向发出的能量。
+
+![67](./image/67.png)
+
+接合前面的概念，可以得到两个不同方向的新概念：
+
+- **Incident Radiance**： 单位立体角的Irradiance，即单位面积所接收的入射单位立体角的能量。
+
+  ![68](./image/68.png)
+
+- **Exiting Radiance**：单位面积上的Intensity，即单位面积在某一立体角发射出去的能量。
+
+  ![69](./image/69.png)
+
+Irradiance是单位面积接收的所有能量；Radiance是单位面积从某一方向接收的能量。
+
+Irradiance是Radiance对立体角的积分；Radiance是Irradiance对立体角的微分。
+
+![70](./image/70.png)
+
 ## Lecture 15 Ray Tracing 3
 
 ###### Light Transport & Global Illumination
+
+### Bidirectional Reflectance Distribution Function（BRDF）双向反射分布函数
+
+#### BRDF
+
+光线从某个方向进入，并且反射到某个方向的能量；光线照射到物体，物体吸收光线，物体发射光线。定义了不同的材质。
+
+![71](./image/71.png)
+
+#### The Reflection Equation 反射方程
+
+对一个点（极小的面积）而言，其接收各个方向（半球）的光照后，向某一方向反射的光强。
+
+是一个递归的定义，因为需要考虑来自各个方向光照（不局限于光源）。
+
+![72](./image/72.png)
+
+#### The Rendering Equation 渲染方程
+
+一个物体的出射光线由两部分组成：
+
+- 吸收并反射的光（）反射方程
+- 自发光
+
+![73](./image/73.png)
+$$
+I(u) = e(u) + \int{I(v)K(u,v)dv}\\
+$$
+其中$I(v)$为输入，$I(u)$为输出，其他量已知，$K(u,v)dv$ 是 **Kernel of Equation**。
+
+#### 全局光照
+
+将上面渲染方程简化为算子形式：$L = E + KL$
+
+使用级数展开，将看到的光源展开为：
+
+- 0次反射：光源自发光
+- 1次反射：直接光照，光源->物体->相机
+- 2次反射、...、n次反射：间接光照，光源->物体->物体->...->相机
+
+的和，其中**全局光照 = 直接光照 + 间接光照**。
+
+而光栅化方法的着色只能实现0、1次反射。
+
+![74](./image/74.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
