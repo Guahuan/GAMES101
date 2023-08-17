@@ -74,9 +74,7 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
     // Then return it.
 
     // Compute l, r, b, t
-    zNear = -zNear;
-    zFar = -zFar;
-    float t = std::tan((eye_fov * MY_PI / 180) / 2) * fabs(zNear);
+    float t = std::tan((eye_fov * MY_PI / 180) / 2) * (-zNear);
     float b = -t;
     float r = aspect_ratio * t;
     float l = -r;
