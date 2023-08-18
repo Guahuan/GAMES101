@@ -41,6 +41,8 @@
 
 把所有折射、反射点的着色值都写入此像素中。
 
+如果物体是镜面的，则光线进行折射、反射；物体不完全光滑，则光线被吸收，进行漫反射。
+
 ![11](./image/11.png)
 
 ### Ray-Surface Intersection
@@ -274,8 +276,8 @@ Irradiance是Radiance对立体角的积分；Radiance是Irradiance对立体角�
 
 一个物体的出射光线由两部分组成：
 
-- 吸收并反射的光（）反射方程
 - 自发光
+- 吸收并反射的光（）反射方程
 
 ![73](./image/73.png)
 $$
@@ -283,7 +285,7 @@ I(u) = e(u) + \int{I(v)K(u,v)dv}\\
 $$
 其中$I(v)$为输入，$I(u)$为输出，其他量已知，$K(u,v)dv$ 是 **Kernel of Equation**。
 
-#### 全局光照
+#### Global Illumination 全局光照
 
 将上面渲染方程简化为算子形式：$L = E + KL$
 
@@ -301,7 +303,24 @@ $$
 
 ## Lecture 16 Ray Tracing 4
 
+###### Monte Carlo Path Tracing
 
+### Monte Carlo Integration 积分
+
+**目的**：给定一个复杂函数，计算其定积分的值。
+
+**做法**：在函数内进行多次采样，使用采样点的值代替函数值（长方形），使用得到的长方形结果的平均值代替定积分的值。
+
+**采样方式**：通过概率分布函数进行采样（PDF）。
+
+![75](./image/75.png)
+
+- 样本越多，误差越小
+- 对x采样，对x积分
+
+### Path Tracing 路径追踪
+
+解渲染方程。
 
 
 
