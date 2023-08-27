@@ -194,7 +194,7 @@ public:
 
         return intersec;
     }
-    
+
     void Sample(Intersection &pos, float &pdf){
         bvh->Sample(pos, pdf);
         pos.emit = m->getEmission();
@@ -253,6 +253,12 @@ inline Intersection Triangle::getIntersection(Ray ray)
     t_tmp = dotProduct(e2, qvec) * det_inv;
 
     // TODO find ray triangle intersection
+    inter.happened = true;
+    inter.coords = ray.origin + t_tmp * ray.direction;
+    inter.normal = this->normal;
+    inter.distance = dotProduct(t_tmp * ray.direction, t_tmp * ray.direction);
+    inter.obj = this;
+    inter.m = this->m;
 
     return inter;
 }
