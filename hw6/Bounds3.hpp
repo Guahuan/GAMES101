@@ -98,6 +98,7 @@ inline bool Bounds3::IntersectP(const Ray& ray, const Vector3f& invDir,
     // TODO test if ray bound intersects
     float t_enter;
     float t_exit;
+    // origin + dir * t = p
     Vector3f t_enter_v3f = (pMin - ray.origin) * invDir;
     Vector3f t_exit_v3f = (pMax - ray.origin) * invDir;
 
