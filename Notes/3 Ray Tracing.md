@@ -369,3 +369,81 @@ $$
 
 ![85](./image/85.png)
 
+## Lecture 17 Materials and Appearances
+
+### Material == BSDF == BRDF + BTDF
+
+通过能量守恒，对一个不吸收光的（纯白色）、漫反射的（BRDF为常数）物体，其吸收能量（各角度均匀）等于发射能量。
+
+即$f_r$（BRDF）、$L_i$（吸收能量）为常量，且$L_o(发射能量) == L_i$
+
+**反射率（albedo）**：$\rho \in [0,1]$，决定了BRDF的颜色（材质）
+
+![86](./image/86.png)
+
+### Perfect Specular Reflection 完美镜面反射BRDF
+
+![87](/Users/yujiekong/Desktop/GAMES101/Notes/image/87.png)
+
+### Specular Refraction 镜面折射BTDF
+
+折射定律
+
+**折射率**：$\eta$
+
+![88](/Users/yujiekong/Desktop/GAMES101/Notes/image/88.png)
+
+<img src="/Users/yujiekong/Desktop/GAMES101/Notes/image/89.png" alt="89" style="zoom:50%;" />
+
+如果根号内小于0，即$\frac{\eta_i}{\eta_t} > 1$，折射可能不会发生（全反射）。
+
+### Fresnel Term 菲涅尔项
+
+决定了观测角度和一个物体反射率的关系。
+
+![90](/Users/yujiekong/Desktop/GAMES101/Notes/image/90.png)
+
+### Microfacet Material 微表面模型
+
+#### 微表面理论
+
+物体表面是粗糙的；从远处看，看到的是粗糙的平面（材质和外观）；从近处看，看到的是凹凸不平的镜面反射（几何）。
+
+#### 微表面BRDF
+
+研究微表面的法线分布，在宏观层面获得分布范围。法线分布集中，即为镜面反射；法线分布分散，即为漫反射。
+
+#### 材质类型
+
+**Isotropic**：各向同性，法线各个方向分布均匀（微表面，天然），只和相对方位角有关（BRDF）。
+
+**Anisotropic**：各向异性，法线方向统一（微表面，打磨），和绝对方位角、相对方位角有关（BRDF）。
+
+### BRDF性质
+
+- 非负数
+
+  <img src="/Users/yujiekong/Desktop/GAMES101/Notes/image/91.png" alt="91" style="zoom:50%;" />
+
+- 线性可累加
+
+  <img src="/Users/yujiekong/Desktop/GAMES101/Notes/image/92.png" alt="92" style="zoom:50%;" />
+
+- 可逆性
+
+  <img src="/Users/yujiekong/Desktop/GAMES101/Notes/image/93.png" alt="93" style="zoom:50%;" />
+
+- 能量守恒
+
+  <img src="/Users/yujiekong/Desktop/GAMES101/Notes/image/94.png" alt="94" style="zoom:50%;" />
+
+- 各向异性、各向同性
+
+  <img src="/Users/yujiekong/Desktop/GAMES101/Notes/image/95.png" alt="95" style="zoom:50%;" />
+
+### 测量BRDF
+
+<img src="/Users/yujiekong/Desktop/GAMES101/Notes/image/96.png" alt="96" style="zoom:50%;" />
+
+<img src="/Users/yujiekong/Desktop/GAMES101/Notes/image/97.png" alt="97" style="zoom:50%;" />
+
