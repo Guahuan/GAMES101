@@ -64,11 +64,55 @@
 
 ## Lecture 22 Animation 2
 
+###### 物理模拟实操
 
+### Euler's Method 欧拉方法（前向）
 
+通过上一次迭代结果求本次迭代的结果。
 
+- 误差会累积，精度和$\Delta t$大小强相关。
+- 不稳定，出现diverge现象，即不论$\Delta t$大小，都与预期有很大区别。
 
+<img src="./image/102.png" alt="102" style="zoom: 50%;" />
 
+### Combating Instability 解决不稳定问题
 
+#### Midpoint Method 中点法
 
+<img src="./image/103.png" alt="103" style="zoom: 50%;" />
 
+#### Adaptive Step Size 自适应步长
+
+#### Implicit Euler Method 隐式欧拉（后项）
+
+<img src="./image/104.png" alt="104" style="zoom: 50%;" />
+
+#### Runge-Kutta Families 龙格法
+
+##### RK4 四阶龙格
+
+<img src="./image/105.png" alt="105" style="zoom: 50%;" />
+
+#### Position-Based / Verlet Integration 非基于物理方法
+
+直接对物体调整位置。
+
+- 速度快、计算简单
+- 不基于物理，非能量守恒
+
+##### Rigid Body Simulation 刚体模拟
+
+- 和粒子模拟类似
+- 考虑更多的物理量
+
+##### 基于位置的流体模拟
+
+- 假设流体是很多刚体小球组成
+- 认为流体在任何情况都是不可压缩的（密度为常数），所以可以获得任何时刻、空间的流体密度。
+- 通过移动刚体小球，使得密度与静止状态密度相同，修正密度变化。
+- 需要考虑密度梯度，进行梯度下降。
+
+对大规模物体（刚体小球）两种模拟方法：
+
+- **拉格朗日方法（质点法）**：模拟所有物体的状态
+- **欧拉方法（网格法）**：将空间切分为网格，模拟网格状态
